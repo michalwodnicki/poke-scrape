@@ -1,6 +1,7 @@
 # Pokémon Price Tracker
 
-A simple Flask web app to search for Pokémon card prices. Currently uses mock data; later can be connected to the eBay API and a database.
+A simple Flask web app to search for Pokémon card prices.  
+Currently uses mock data; later it can be connected to the eBay API and a database to track prices over time.
 
 ---
 
@@ -38,18 +39,27 @@ cd poke-scrape
 ### 2. Poetry Setup
 
 Check installation: 
+
+```bash
 poetry --version
+```
 
 Install dependencies:
+```bash
 poetry install
+```
 
 ### 3. Run the app locally
 
 Activate the Poetry shell:
+```bash
 poetry shell
+```
 
 Run the Flask app:
+```bash
 python run.py
+```
 
 You should see output like:
 Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
