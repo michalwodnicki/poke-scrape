@@ -11,6 +11,8 @@ Currently uses mock data; later it can be connected to the eBay API and a databa
 poke-scrape
 ├─ app
 │  ├─ routes.py
+│  ├─ static
+│  │  └─ style.css
 │  ├─ templates
 │  │  ├─ about.html
 │  │  ├─ base.html
@@ -22,7 +24,6 @@ poke-scrape
 ├─ pyproject.toml
 ├─ README.md
 └─ run.py
-
 ```
 
 ---
