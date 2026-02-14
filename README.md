@@ -6,21 +6,24 @@ A simple Flask web app to search for Pokémon card prices. Currently uses mock d
 
 ## **Project Structure**
 
-poke-scrape/
-│
-├── app/
-│ ├── init.py # Flask app and routes
-│ ├── templates/ # HTML templates
-│ │ ├── base.html
-│ │ ├── home.html
-│ │ ├── search.html
-│ │ ├── about.html
-│ │ └── contact.html
-│
-├── pyproject.toml # Poetry dependencies
-├── poetry.lock
-├── run.py # Entrypoint to run the Flask app
-└── README.md
+```
+poke-scrape
+├─ app
+│  ├─ templates
+│  │  ├─ about.html
+│  │  ├─ base.html
+│  │  ├─ contact.html
+│  │  ├─ home.html
+│  │  └─ search.html
+│  ├─ __init__.py
+│  └─ __pycache__
+│     └─ __init__.cpython-313.pyc
+├─ poetry.lock
+├─ pyproject.toml
+├─ README.md
+└─ run.py
+
+```
 
 ---
 
@@ -58,4 +61,3 @@ Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 - Navigate to /search to access the Pokémon card search page.
 - Enter a card name (e.g., "Charizard PSA 10") and submit.
 - Currently displays mock results; real eBay API integration coming soon.
-
