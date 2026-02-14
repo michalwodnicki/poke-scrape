@@ -16,8 +16,6 @@ poke-scrape
 │  │  ├─ home.html
 │  │  └─ search.html
 │  ├─ __init__.py
-│  └─ __pycache__
-│     └─ __init__.cpython-313.pyc
 ├─ poetry.lock
 ├─ pyproject.toml
 ├─ README.md
