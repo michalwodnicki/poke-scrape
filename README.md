@@ -1,16 +1,61 @@
-# poke-scrape
+# Pokémon Price Tracker
 
-This is a project aimed at creating an ebay scraper to help purchase pokemon cards.
+A simple Flask web app to search for Pokémon card prices. Currently uses mock data; later can be connected to the eBay API and a database.
 
-# Roadmap
-- Scrape eBay listings
-- Scrape eBay stores
-- Create web app with UI to query real time
+---
 
-# Tech Stack
-- Python
-    - Poetry
-    - TBD
-- Git
+## **Project Structure**
 
-  
+poke-scrape/
+│
+├── app/
+│ ├── init.py # Flask app and routes
+│ ├── templates/ # HTML templates
+│ │ ├── base.html
+│ │ ├── home.html
+│ │ ├── search.html
+│ │ ├── about.html
+│ │ └── contact.html
+│
+├── pyproject.toml # Poetry dependencies
+├── poetry.lock
+├── run.py # Entrypoint to run the Flask app
+└── README.md
+
+---
+
+## Getting Started
+
+Follow these steps to run the app locally.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/michalwodnicki/poke-scrape.git
+cd poke-scrape
+```
+### 2. Poetry Setup
+
+Check installation: 
+poetry --version
+
+Install dependencies:
+poetry install
+
+### 3. Run the app locally
+
+Activate the Poetry shell:
+poetry shell
+
+Run the Flask app:
+python run.py
+
+You should see output like:
+Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+
+### 4. Using the app
+
+- Navigate to /search to access the Pokémon card search page.
+- Enter a card name (e.g., "Charizard PSA 10") and submit.
+- Currently displays mock results; real eBay API integration coming soon.
+
