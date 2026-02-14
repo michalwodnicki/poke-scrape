@@ -10,13 +10,14 @@ Currently uses mock data; later it can be connected to the eBay API and a databa
 ```
 poke-scrape
 ├─ app
+│  ├─ routes.py
 │  ├─ templates
 │  │  ├─ about.html
 │  │  ├─ base.html
 │  │  ├─ contact.html
 │  │  ├─ home.html
 │  │  └─ search.html
-│  ├─ __init__.py
+│  └─ __init__.py
 ├─ poetry.lock
 ├─ pyproject.toml
 ├─ README.md
