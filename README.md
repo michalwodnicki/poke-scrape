@@ -23,7 +23,9 @@ poke-scrape
 ├─ poetry.lock
 ├─ pyproject.toml
 ├─ README.md
-└─ run.py
+├─ requirements.txt
+├─ run.py
+└─ wsgi.py
 ```
 
 ---
