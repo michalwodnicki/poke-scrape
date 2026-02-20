@@ -14,7 +14,7 @@
     <h2>Results for "{{ query }}":</h2>
     <ul>
     {% for item in results %}
-        <li>{{ item.title }} - {{ item.price }} {{ item.currency }}</li>
+        <li>{{ item.title }} - {{ item.price }} {{ item.currency }} - {{ item.url }}</li>
     {% endfor %}
     </ul>
 {% elif query %}
