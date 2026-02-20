@@ -360,6 +360,21 @@ files = [
 test = ["pytest"]
 
 [[package]]
+name = "dacite"
+version = "1.9.2"
+description = "Simple creation of data classes from dictionaries."
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "dacite-1.9.2-py3-none-any.whl", hash = "sha256:053f7c3f5128ca2e9aceb66892b1a3c8936d02c686e707bee96e19deef4bc4a0"},
+    {file = "dacite-1.9.2.tar.gz", hash = "sha256:6ccc3b299727c7aa17582f0021f6ae14d5de47c7227932c47fec4cdfefd26f09"},
+]
+
+[package.extras]
+dev = ["black", "coveralls", "mypy", "pre-commit", "pylint", "pytest (>=5)", "pytest-benchmark", "pytest-cov"]
+
+[[package]]
 name = "debugpy"
 version = "1.8.20"
 description = "An implementation of the Debug Adapter Protocol for Python"
@@ -951,6 +966,24 @@ files = [
     {file = "platformdirs-4.9.2-py3-none-any.whl", hash = "sha256:9170634f126f8efdae22fb58ae8a0eaa86f38365bc57897a6c4f781d1f5875bd"},
     {file = "platformdirs-4.9.2.tar.gz", hash = "sha256:9a33809944b9db043ad67ca0db94b14bf452cc6aeaac46a88ea55b26e2e9d291"},
 ]
+
+[[package]]
+name = "pokemontcgsdk"
+version = "3.4.0"
+description = "Pokemon TCG SDK for pokemontcg.io"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "pokemontcgsdk-3.4.0-py3-none-any.whl", hash = "sha256:50508e6964ce76909d9def3ed5d72eb5a3ba9effb60186d50ec29d3e53dda56c"},
+    {file = "pokemontcgsdk-3.4.0.tar.gz", hash = "sha256:5ebc6a0f5fae14535ef30ab39d6dd55ae0d88b1cdb85bc02ad883900fc1d5551"},
+]
+
+[package.dependencies]
+dacite = ">=1.6.0"
+
+[package.extras]
+tests = ["coverage", "coveralls", "ipdb", "mock", "nose", "preggy", "sphinx", "tox", "vcrpy", "yanc"]
 
 [[package]]
 name = "prompt-toolkit"
@@ -1654,4 +1687,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "4d89e7dd228f6d75c05748ed7d689cfd1f7f2a354b28fcd463a34a49f2bdcc62"
+content-hash = "a44a19a474389a1f187d81e356ec88adfa7b96ced0dae517f2dd31b39e587d05"

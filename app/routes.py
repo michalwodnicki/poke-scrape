@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request
 
+from .services.ebay import search_items
+
 main = Blueprint("main", __name__)
 
 
@@ -22,13 +24,16 @@ def contact():
 def search():
     results = None
     query = ""
+    
+    print("Request method:", request.method)
 
     if request.method == "POST":
         query = request.form.get("query", "").strip()
         if query:
-            results = [
-                {"title": f"{query} Card Example 1", "price": "20", "currency": "USD"},
-                {"title": f"{query} Card Example 2", "price": "35", "currency": "USD"},
-            ]
+            try:
+                results = search_items(query)
+            except Exception as e:
+                print("Error fetching from eBay:", e)
+                results = []
 
     return render_template("search.html", query=query, results=results)
