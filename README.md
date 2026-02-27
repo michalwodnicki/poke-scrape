@@ -11,6 +11,10 @@ Currently uses mock data; later it can be connected to the eBay API and a databa
 poke-scrape
 ├─ app
 │  ├─ routes.py
+│  ├─ services
+│  │  ├─ ebay.py
+│  │  ├─ pricecharting.py
+│  │  └─ __init__.py
 │  ├─ static
 │  │  └─ style.css
 │  ├─ templates
@@ -20,11 +24,13 @@ poke-scrape
 │  │  ├─ home.html
 │  │  └─ search.html
 │  └─ __init__.py
+├─ charting.ipynb
 ├─ poetry.lock
 ├─ pyproject.toml
 ├─ README.md
 ├─ requirements.txt
 ├─ run.py
+├─ testing.ipynb
 └─ wsgi.py
 ```
 
