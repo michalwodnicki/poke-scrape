@@ -1,6 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
+from datetime import datetime
+
+from collections import defaultdict
+import statistics
 
 
 GRADE_MAP = {
@@ -23,7 +26,7 @@ GRADE_MAP = {
 }
 
 
-def scrape_pricecharting_sales(url: str) -> pd.DataFrame:
+def scrape_pricecharting_sales(url: str) -> list[dict]:
     headers = {"User-Agent": "Mozilla/5.0"}
 
     response = requests.get(url, headers=headers)
@@ -31,7 +34,7 @@ def scrape_pricecharting_sales(url: str) -> pd.DataFrame:
 
     soup = BeautifulSoup(response.text, "html.parser")
 
-    all_sales = []
+    all_sales: list[dict] = []
 
     containers = soup.select("div[class*='completed-auctions-']")
 
@@ -51,7 +54,6 @@ def scrape_pricecharting_sales(url: str) -> pd.DataFrame:
             continue
 
         rows = container.select("tr[id^='ebay-']")
-
         if not rows:
             continue
 
@@ -65,29 +67,68 @@ def scrape_pricecharting_sales(url: str) -> pd.DataFrame:
 
             ebay_id = str(row["id"]).replace("ebay-", "")
 
+            price_text = (
+                price_tag.get_text(strip=True)
+                .replace("$", "")
+                .replace(",", "")
+            )
+
+            try:
+                price = float(price_text)
+            except ValueError:
+                continue
+
+            try:
+                date = datetime.strptime(
+                    date_tag.get_text(strip=True),
+                    "%Y-%m-%d"
+                )
+            except ValueError:
+                continue
+
             all_sales.append({
                 "ebay_id": ebay_id,
                 "grade": grade_label,
-                "date_raw": date_tag.get_text(strip=True),
+                "date": date,
+                "price": price,
                 "title": title_tag.get_text(strip=True),
-                "price_raw": price_tag.get_text(strip=True),
             })
 
-    if not all_sales:
-        return pd.DataFrame()
+    return all_sales
 
-    df = pd.DataFrame(all_sales)
+def compute_comp_stats(sales: list[dict]) -> dict:
+    """
+    Accepts list of sale dictionaries.
+    Returns grade-level summary statistics.
+    """
 
-    df["price"] = (
-        df["price_raw"]
-        .str.replace("$", "", regex=False)
-        .str.replace(",", "", regex=False)
-        .astype(float)
-    )
+    if not sales:
+        return {}
 
-    df["date"] = pd.to_datetime(df["date_raw"])
+    grade_groups: dict[str, list[dict]] = defaultdict(list)
 
-    df = df[["ebay_id", "grade", "date", "price", "title"]]
+    # Group sales by grade
+    for sale in sales:
+        grade_groups[sale["grade"]].append(sale)
 
-    return df
+    summary = {}
 
+    for grade, items in grade_groups.items():
+        prices = [item["price"] for item in items]
+
+        # Most recent sale (based on datetime object in "date")
+        latest_sale_price = max(
+            items,
+            key=lambda x: x["date"]
+        )["price"]
+
+        summary[grade] = {
+            "count": len(prices),
+            "median": round(statistics.median(prices), 2),
+            "mean": round(statistics.mean(prices), 2),
+            "min": min(prices),
+            "max": max(prices),
+            "latest_sale": latest_sale_price,
+        }
+
+    return summary
