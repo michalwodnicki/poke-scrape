@@ -6,19 +6,41 @@
 <h1>Search Pokémon Cards</h1>
 
 <form method="post">
-    <input type="text" name="query" placeholder="Charizard PSA 10" value="{{ query }}">
+    <input type="text" name="url" placeholder="Paste PriceCharting card URL here" value="{{ query }}">
     <button type="submit">Search</button>
 </form>
 
 {% if results %}
-    <h2>Results for "{{ query }}":</h2>
-    <ul>
-    {% for item in results %}
-        <li>{{ item.title }} - {{ item.price }} {{ item.currency }} - {{ item.url }}</li>
-    {% endfor %}
-    </ul>
+  <h2>Results for "{{ query }}":</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Grade</th>
+        <th>Price</th>
+        <th>Title</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in results %}
+      <tr>
+        <td>{{ item.date.strftime("%m-%d-%Y") }}</td>
+        <td>{{ item.grade }}</td>
+        <td>${{ "%.2f"|format(item.price) }}</td>
+        <td>
+          <a href="{{ item.url }}" target="_blank">
+            {{ item.title }}
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
 {% elif query %}
-    <p>No results found for "{{ query }}".</p>
+  <p>No results found for "{{ query }}".</p>
+
 {% endif %}
 
 {% endblock %}

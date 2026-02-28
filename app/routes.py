@@ -1,6 +1,9 @@
 from flask import Blueprint, render_template, request
+from urllib.parse import quote
 
-from .services.ebay import search_items
+from app.services.ebay import search_items
+from app.services.pricecharting import scrape_pricecharting_sales, compute_comp_stats
+
 
 main = Blueprint("main", __name__)
 
@@ -22,18 +25,23 @@ def contact():
 
 @main.route("/search", methods=["GET", "POST"])
 def search():
-    results = None
     query = ""
-    
-    print("Request method:", request.method)
+    sales = []
+    stats = {}
 
     if request.method == "POST":
-        query = request.form.get("query", "").strip()
-        if query:
-            try:
-                results = search_items(query)
-            except Exception as e:
-                print("Error fetching from eBay:", e)
-                results = []
+        raw_url = request.form.get("url", "").strip()
 
-    return render_template("search.html", query=query, results=results)
+        if raw_url:
+            url = raw_url  # use whatever the user pasted
+            sales = scrape_pricecharting_sales(url)
+            sales = sorted(sales, key=lambda x: x["date"], reverse=True)
+            stats = compute_comp_stats(sales)
+            query = raw_url  # so we display the URL back in the template
+
+    return render_template(
+        "search.html",
+        query=query,
+        results=sales,
+        stats=stats
+    )

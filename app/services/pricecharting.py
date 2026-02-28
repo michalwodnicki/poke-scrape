@@ -92,6 +92,7 @@ def scrape_pricecharting_sales(url: str) -> list[dict]:
                 "date": date,
                 "price": price,
                 "title": title_tag.get_text(strip=True),
+                "url": f"https://www.ebay.com/itm/{ebay_id}"
             })
 
     return all_sales
