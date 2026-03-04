@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from urllib.parse import quote
 
 from app.services.ebay import search_items
-from app.services.pricecharting import scrape_pricecharting_sales, compute_comp_stats
+from app.services.pricecharting import scrape_pricecharting_sales
 
 
 main = Blueprint("main", __name__)
@@ -36,7 +36,6 @@ def search():
             url = raw_url  # use whatever the user pasted
             sales = scrape_pricecharting_sales(url)
             sales = sorted(sales, key=lambda x: x["date"], reverse=True)
-            stats = compute_comp_stats(sales)
             query = raw_url  # so we display the URL back in the template
 
     return render_template(
