@@ -226,3 +226,19 @@ def scrape_pricecharting_set_cards(set_slug: str):
         cursor += len(products)
 
     return cards
+
+def card_market_prices(url: str) -> list[dict]:
+        
+    headers = {
+    "User-Agent": "Mozilla/5.0"
+    }
+
+    resp = requests.get(url, headers=headers)
+    resp.raise_for_status()
+
+    soup=BeautifulSoup(resp.text, "html.parser")
+    
+    results=[]
+
+
+    return results
