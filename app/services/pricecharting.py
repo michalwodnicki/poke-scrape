@@ -2,9 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 from urllib.parse import urljoin
+import re
 
 from collections import defaultdict
-import statistics
 
 
 GRADE_MAP = {
@@ -27,6 +27,34 @@ GRADE_MAP = {
 }
 
 BASE_URL = "https://www.pricecharting.com"
+
+def parse_card_name(full_name: str):
+    """
+    Parses a PriceCharting card name.
+
+    Example:
+    'Porygon [Reverse Holo] #103a'
+    ->
+    base_name = 'Porygon'
+    number = '103a'
+    variant = 'Reverse Holo'
+    """
+
+    # extract variant inside []
+    variant_match = re.search(r"\[(.*?)\]", full_name)
+    variant = variant_match.group(1).strip() if variant_match else None
+
+    # remove variant from string
+    name_no_variant = re.sub(r"\s*\[.*?\]", "", full_name)
+
+    # extract card number after #
+    number_match = re.search(r"#([^\s]+)", name_no_variant)
+    number = number_match.group(1) if number_match else None
+
+    # remove number from string
+    base_name = re.sub(r"\s*#[^\s]+", "", name_no_variant).strip()
+
+    return base_name, number, variant
 
 
 def scrape_pricecharting_sales(url: str) -> list[dict]:
@@ -99,43 +127,6 @@ def scrape_pricecharting_sales(url: str) -> list[dict]:
             })
 
     return all_sales
-
-def compute_comp_stats(sales: list[dict]) -> dict:
-    """
-    Accepts list of sale dictionaries.
-    Returns grade-level summary statistics.
-    """
-
-    if not sales:
-        return {}
-
-    grade_groups: dict[str, list[dict]] = defaultdict(list)
-
-    # Group sales by grade
-    for sale in sales:
-        grade_groups[sale["grade"]].append(sale)
-
-    summary = {}
-
-    for grade, items in grade_groups.items():
-        prices = [item["price"] for item in items]
-
-        # Most recent sale (based on datetime object in "date")
-        latest_sale_price = max(
-            items,
-            key=lambda x: x["date"]
-        )["price"]
-
-        summary[grade] = {
-            "count": len(prices),
-            "median": round(statistics.median(prices), 2),
-            "mean": round(statistics.mean(prices), 2),
-            "min": min(prices),
-            "max": max(prices),
-            "latest_sale": latest_sale_price,
-        }
-
-    return summary
 
 def scrape_pricecharting_sets():
 
@@ -240,5 +231,62 @@ def card_market_prices(url: str) -> list[dict]:
     
     results=[]
 
+    price_section = soup.find("div", id="full-prices")
+    if not price_section:
+        return results
+
+    rows = price_section.select("table tr")
+
+    for row in rows:
+        cols = row.find_all("td")
+
+        if len(cols) < 2:
+            continue
+    
+        grade = cols[0].get_text(strip=True)
+        price_text = cols[1].get_text(strip=True)
+
+        if price_text == "-" or not price_text:
+            price = None
+        else:
+            price = float(
+                price_text.replace("$", "").replace(",", "")
+            )
+
+        results.append({
+            "grade": grade,
+            "price": price
+        })   
 
     return results
+
+def scrape_pricecharting_card(card: dict) -> dict:
+    """
+    Scrapes a single card page for:
+    - price guide
+    - recent sales
+
+    Input:
+        card dict from your set scraper
+
+    Returns structured card object
+    """
+
+    name = card["name"]
+    url = card["url"]
+
+    base_name, number, variant = parse_card_name(name)
+
+    price_guide = card_market_prices(url)
+    sales = scrape_pricecharting_sales(url)
+
+    return {
+        "card_id": card["id"],
+        "name": card["name"],
+        "base_name": base_name,
+        "number": number,
+        "variant": variant,
+
+        "price_guide": price_guide,
+        "sales": sales
+    }
