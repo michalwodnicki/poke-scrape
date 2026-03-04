@@ -160,7 +160,13 @@ def scrape_pricecharting_sets():
 
         if href and isinstance(href, str):
             full_url = urljoin(BASE_URL, href)
-            sets_list.append({"name": name, "url": full_url})
+            slug = href.split("/")[-1]
+
+            sets_list.append({
+                "name": name,
+                "url": full_url,
+                "set-slug": slug
+            })
 
     return sets_list
 
@@ -211,7 +217,8 @@ def scrape_pricecharting_set_cards(set_slug: str):
             cards.append({
                 "name": name,
                 "url": full_url,
-                "id": p.get("id")
+                "card_id": p.get("id"),
+                "set_slug": set_slug
             })
 
         cursor += len(products)
@@ -281,7 +288,7 @@ def scrape_pricecharting_card(card: dict) -> dict:
     sales = scrape_pricecharting_sales(url)
 
     return {
-        "card_id": card["id"],
+        "card_id": card["card_id"],
         "name": card["name"],
         "base_name": base_name,
         "number": number,
